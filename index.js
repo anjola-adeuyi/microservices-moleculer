@@ -1,8 +1,10 @@
 import UserService from './services/user.service.js';
+import EmailService from './services/email.service.js';
 
 async function startApp() {
   // Start services
   await UserService.start();
+  await EmailService.start();
 
   try {
     // Simulate user creation
@@ -19,6 +21,11 @@ async function startApp() {
     console.log('All Users:', users);
 
     // Simulate sending email
+    await EmailService.call('email.sendEmail', {
+      to: user.email,
+      subject: `Welcome ${user.name}`,
+      content: 'Welcome to our platform!',
+    });
 
     // Simulate auth
   } catch (error) {
@@ -26,6 +33,7 @@ async function startApp() {
   } finally {
     // Stop the services
     await UserService.stop();
+    await EmailService.stop();
   }
 }
 
